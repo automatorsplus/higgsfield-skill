@@ -9,7 +9,7 @@ Generate images and videos through Higgsfield's MCP. One connector gives Claude 
 - **One MCP, 30+ models** -- no per-provider API keys to juggle. One OAuth connection, every model in the catalogue.
 - **Cost-approval gate** -- Claude tells you the model + estimated credit cost before every generation. You confirm before any credits burn.
 - **Workflow patterns built in** -- one-off images, parallel variants, image-to-video chains, branded asset packs. Trigger with plain English.
-- **Honest "when not to use"** -- skill refuses to push someone onto a Higgsfield subscription for one project. Recommends pay-as-you-go alternatives instead.
+- **Failure handling baked in** -- generic "something went wrong" errors get diagnosed (plan tier, auth lapse, content filter) instead of looping forever.
 
 ## Prerequisites
 

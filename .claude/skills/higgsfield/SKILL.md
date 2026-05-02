@@ -9,9 +9,7 @@ One MCP connection, 30+ image and video models, all billed against the user's ex
 
 ## When to use this skill
 
-Only when the user **has an active Higgsfield subscription**. The point is they're already paying for credits — this skill just makes them spendable from inside Claude.
-
-If they don't subscribe yet, point them at fal.ai or kie.ai for pay-as-you-go on the same models. Don't push someone onto a Higgsfield subscription for one project.
+Use this skill any time the user wants to generate images or videos through Higgsfield, or asks Claude to use a model in Higgsfield's catalogue. The skill assumes the user has an active Higgsfield subscription — if their auth fails, prompt them to check their account.
 
 ## Setup
 
