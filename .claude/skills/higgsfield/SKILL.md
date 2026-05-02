@@ -29,15 +29,51 @@ If MCP tools don't appear after install, restart your Claude session.
 
 If generation calls fail silently after a clean auth, check whether your Higgsfield workspace needs to be selected — refer to Higgsfield's own docs at higgsfield.ai for the latest setup notes.
 
-## The cost approval rule
+## The cost approval rule (NON-NEGOTIABLE)
 
-Higgsfield bills in credits. Credits cost real money. Before any image or video generation, do this every time:
+Higgsfield bills in credits. Credits cost real money. Every single image or video generation must pass through this gate. No exceptions.
 
-1. State the model + key settings (resolution, duration, count).
-2. Tell the user the rough credit cost — verify in their dashboard if you're unsure.
-3. Wait for explicit confirmation before firing.
+**The user's original request is a REQUEST, not approval.** A prompt like "use higgsfield to generate a thumbnail" is the user asking you to start the flow — it is **not** permission to fire the API call. Approval is a separate, explicit confirmation that comes AFTER you quote the cost.
 
-Auto mode does NOT override this. Burning credits silently is the fastest way to lose user trust on a paid MCP.
+### Mandatory pre-generation flow
+
+For every `generate_image` or `generate_video` call, in this order:
+
+1. **Call `balance` first** to fetch current credits. Always. Do not skip even if you "know" the balance from earlier in the session — it changes.
+2. **Quote the cost block** in this exact shape:
+   ```
+   Model: <model_id>
+   Settings: <aspect_ratio, resolution, count, duration if video>
+   Estimated cost: ~<X> credits (range Y-Z if uncertain)
+   Current balance: <from balance call>
+   Balance after: <current - estimated>
+
+   Reply "go" to fire, or tell me what to adjust.
+   ```
+3. **STOP. Wait.** Do not call `generate_image` / `generate_video` until the user replies with an explicit approval token: `go`, `yes`, `fire`, `proceed`, or equivalent. Anything else (silence, a follow-up question, a tweak to the prompt) is NOT approval.
+4. **One approval = one generation batch.** If the user says "go" once, that authorises the single batch you quoted. A second generation needs a fresh quote and a fresh "go". Never roll multiple batches into one approval.
+
+### Calibrated cost reference (verify in dashboard, update as you learn)
+
+| Model | Settings | Approx credits |
+|---|---|---|
+| `gpt_image_2` | 2K medium | ~3 |
+| `gpt_image_2` | 4K high | ~10-12 |
+| `nano_banana_2` | 2K | ~10-12 |
+| `nano_banana_2` | 4K | ~20-25 |
+| `seedance_1_5` | 480p / 4s | ~2-3 |
+| `seedance_1_5` | 720p / 4s | ~6-8 |
+| `seedance_1_5` | 720p / 12s | ~18-25 |
+| `seedance_2_0` (any tier) | first call | measure first |
+| Higher-end video (Veo, Sora, Cinema Studio) | first call | measure first |
+
+If you don't have a measured number for the exact model + settings, quote a range AND tell the user this is a first-run calibration — the actual cost will land in the dashboard after the call.
+
+### Why this matters
+
+- Silent credit burn is the #1 way to break user trust on a paid MCP.
+- This skill ships to a community. If a community member's first experience is "Claude burned 50 credits without asking," they'll uninstall and tell their network. The gate is a feature, not friction.
+- Auto mode does NOT override this rule. Even when the user is hands-off, the cost gate fires.
 
 ## Common workflows
 
